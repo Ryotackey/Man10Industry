@@ -1,0 +1,7 @@
+name: mIndustry
+version: 0.1
+main: red.man10.man10industry.Man10Industry
+author: Shupro
+description: Man10 Food Cusmomizing system
+commands:
+  mi:
