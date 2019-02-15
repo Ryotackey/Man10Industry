@@ -1,9 +1,11 @@
 package red.man10.man10industry
 
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import red.man10.man10industry.models.*
+import java.awt.Graphics2D
 import java.util.*
 
 class MIMachine(val pl: Man10Industry) {
@@ -75,4 +77,40 @@ class MIMachine(val pl: Man10Industry) {
         }
         return mutableListOf(ItemStack(Material.AIR))
     }
+
+    fun createMapItem(machineKey: String): ItemStack {
+        var map = MappRenderer.getMapItem(pl!!, machineKey)
+        map.itemMeta.displayName = "§b§l" + pl!!.machines[machineKey]!!.name + "§r§7(100/100)"
+        return map
+    }
+
+    fun createAllMachineMapp(){
+        for (machine in pl!!.machines) {
+            MappRenderer.draw(machine.key, 0) { key: String, mapId: Int, g: Graphics2D ->
+                //      画面更新をする
+                val result = drawImage(g, machine.value.imageName!!, 0, 0, 128, 128)
+                if (!result) {
+                    g.drawString("No Image Found", 10, 10)
+                }
+                true
+            }
+            MappRenderer.displayTouchEvent("machine") { key: String, mapId: Int, player: Player, x: Int, y: Int ->
+                player.chat("/mi usemachine $key")
+                true
+            }
+        }
+    }
+
+    fun drawImage(g: Graphics2D, imageKey: String, x: Int, y: Int, w: Int, h: Int): Boolean {
+        val image = MappRenderer.image(imageKey)
+        if (image == null) {
+            Bukkit.getLogger().warning("no image:$imageKey")
+            return false
+        }
+
+        g.drawImage(image, x, y, w, h, null)
+
+        return true
+    }
+
 }

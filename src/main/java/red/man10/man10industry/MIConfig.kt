@@ -9,16 +9,21 @@ import java.io.File
 
 class MIConfig(val pl: Man10Industry) {
 
-    fun loadAll(cs: CommandSender) { //Load Config & Player Data
+    fun loadAll(cs: CommandSender, isFirst: Boolean) { //Load Config & Player Data
         Bukkit.getScheduler().runTaskAsynchronously(pl) {
-            val mysql = MySQLManager(pl, "MI_LoadAll")
 
             cs.sendMessage(pl.prefix + "§bLoading all configurations...")
             loadChanceSets(cs)
             loadSkills(cs)
             loadRecipes(cs)
             loadMachines(cs)
-            cs.sendMessage(pl.prefix + "§bConfigurations Loaded!")
+
+            if (isFirst) {
+                MappRenderer.setup(pl!!)
+            }
+            pl!!.machine.createAllMachineMapp()
+
+            cs.sendMessage(pl!!.prefix + "§bConfigurations Loaded!")
         }
     }
 

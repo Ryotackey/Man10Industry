@@ -50,7 +50,7 @@ class Man10Industry : JavaPlugin() {
 
         saveDefaultConfig()
 
-        config.loadAll(Bukkit.getConsoleSender())
+        config.loadAll(Bukkit.getConsoleSender(), true)
         val get = getPlayerData(this)
         get.start()
         for (player in Bukkit.getOnlinePlayers()) {
@@ -151,7 +151,7 @@ class Man10Industry : JavaPlugin() {
                                 return true
                             }
                             "reload" -> {
-                                config.loadAll(sender)
+                                config.loadAll(sender, false)
                                 return true
                             }
                             "list" -> {
@@ -189,6 +189,12 @@ class Man10Industry : JavaPlugin() {
                             }
                             "update" -> {
                                 skill.currentPlayerData[Bukkit.getPlayer(args[1]).uniqueId]!!.clear()
+                            }
+                            "get" -> {
+                                if (machines[args[1]] != null) {
+                                    sender.inventory.addItem(machine.createMapItem(args[1]))
+                                    return true
+                                }
                             }
                         }
                     }
@@ -278,6 +284,7 @@ class Man10Industry : JavaPlugin() {
         sender.sendMessage("§3/mi usemachine [machineKey] §7Use a machine")
         sender.sendMessage("§3/mi setlevel [playerId] [skillId] [level] §7Set a level of player")
         sender.sendMessage("§3/mi update [playerId] §7Update player's skill cache by DB.")
+        sender.sendMessage("§3/mi get [machineId] §7Get a machine")
         sender.sendMessage("§bVer 0.2 : by Shupro & Ryotackey")
         sender.sendMessage("§a***************************")
     }
